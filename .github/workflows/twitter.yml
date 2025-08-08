@@ -7,25 +7,23 @@ on:
 
 jobs:
   build:
-    name: Auto Tweet Using AI
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4  # Updated to latest checkout version
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4  # Updated to latest setup-node
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-          cache: "npm"  # Optional: Cache dependencies for faster runs
-
-      - name: Install Dependencies
+      
+      - name: Install & Update Dependencies
         run: |
           npm install
-          # CRITICAL FIX: Force update to latest gemini-ai (v0.1.0+)
-          npm install @google/generative-ai@latest
-
-      - name: Run Twitter bot
+          npm install @google/generative-ai@latest --save-exact
+          # Verify correct version
+          npm list @google/generative-ai
+      
+      - name: Run Bot
         run: npm start
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}  # Ensure this secret exists
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
